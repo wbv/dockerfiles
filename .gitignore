@@ -1,0 +1,2 @@
+# don't autocommit vim swapfiles >:(
+*.swp
