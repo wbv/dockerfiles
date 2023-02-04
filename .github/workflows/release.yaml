@@ -1,0 +1,59 @@
+on:
+  push:
+    branches: [ 'main' ]
+    tags: [ '*' ]
+
+jobs:
+  build-and-publish-container-images:
+
+    strategy:
+      matrix:
+        #=========================================================#
+        # NOTE: update these as dockerfiles are added to the repo #
+        #=========================================================#
+        image: [
+            'pandoc-full',
+            'wkhtmltopdf',
+            'mdbook'
+          ]
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+
+      #===========================#
+      # Always checkout and build #
+      #===========================#
+      - uses: actions/checkout@v3
+      - name: Build Container Image
+        run: ./build.sh ${{ matrix.image }}
+      - name: Define full image tag
+        id: meta
+        run: echo ::set-output name=image::${{ github.repository_owner }}/${{ matrix.image }}
+
+      #=============================================#
+      # Only publish images when commits are tagged #
+      #=============================================#
+      - name: Print full image tags
+        run: echo ${{ steps.meta.outputs.image }}
+
+      # GitHub Container Repo
+      - uses: docker/login-action@v2
+        #if: github.ref_type == 'tag' #TODO: uncomment after verifying login
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          username: ${{ github.token }}
+      - name: Tag and Push to GitHub Container Repository
+        if: github.ref_type == 'tag'
+        run: |
+          docker tag \
+            ${{ matrix.image }} \
+            ghcr.io/${{ steps.meta.outputs.image }}:latest
+          docker tag \
+            ${{ matrix.image }} \
+            ghcr.io/${{ steps.meta.outputs.image }}:${{ github.ref_name }}
+          docker push --all-tags \
+            ghcr.io/${{ steps.meta.outputs.image }}
