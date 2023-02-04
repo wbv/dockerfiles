@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-and-publish-container-images:
-
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         #=========================================================#
@@ -45,7 +45,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          username: ${{ github.token }}
+          password: ${{ github.token }}
       - name: Tag and Push to GitHub Container Repository
         if: github.ref_type == 'tag'
         run: |
