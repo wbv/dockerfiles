@@ -44,8 +44,7 @@ jobs:
       - name: Define full image tag
         #if: github.ref_type == 'tag' #TODO: uncomment after verifying login
         id: ghcr
-        run: echo "image=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}" \
-               >> $GITHUB_OUTPUT
+        run: echo "image=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}" >> $GITHUB_OUTPUT
       - name: Tag and Push to GitHub Container Repository
         if: github.ref_type == 'tag'
         run: |
@@ -67,8 +66,7 @@ jobs:
       - name: Define full image tag
         #if: github.ref_type == 'tag' #TODO: uncomment after verifying login
         id: dockerhub
-        run: echo "image=${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}" \
-               >> $GITHUB_OUTPUT
+        run: echo "image=${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}" >> $GITHUB_OUTPUT
       - name: Tag and Push to Docker Hub
         if: github.ref_type == 'tag'
         run: |

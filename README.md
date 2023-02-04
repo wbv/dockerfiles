@@ -1,7 +1,17 @@
+Generic Docker Images
+---------------------
+
+A collection of generally-reusable docker images I've found myself wishing for
+in various contexts.
+
+The Dockerfiles here get built/tagged/pushed automatically to:
+- GitHub Container Repository: [wbv](https://github.com/wbv?tab=packages)
+- Docker Hub: [wbvn](https://hub.docker.com/u/wbvn)
+
+You can also build them locally yourself:
+
 ```bash
-# Optional: build the container yourself
-# (Recommended: skip this step and just pull from Docker Hub)
-./build.sh
+./build.sh pandoc-full
 
 # Usage:
 # mount your working directory to /data,
@@ -10,11 +20,11 @@
 docker run --rm \
     --volume $(pwd):/data \
     --user $(id -u):$(id -g) \
-    wbvn/pandoc-full --help
+    pandoc-full --help
 
 # Example:
 docker run --rm \
     --volume $(pwd):/data \
     --user $(id -u):$(id -g) \
-    wbvn/pandoc-full README.md -o README.pdf --pdf-engine xelatex --listings
+    pandoc-full README.md -o README.pdf --pdf-engine xelatex --listings
 ```
